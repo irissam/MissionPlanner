@@ -4551,7 +4551,8 @@ Mission Planner waits for 2 valid heartbeat packets before connecting");
                         MAVlist[sysid, compid].cs.messages.Add((DateTime.Now, logdata));
 
                         // gymbals etc are a child/slave to the main sysid, this displays the children messages under the current displayed vehicle
-                        if (sysid == sysidcurrent && compid != compidcurrent)
+                        bool child = (sysid == sysidcurrent && compid != compidcurrent);
+                        if (child)
                             MAVlist[sysidcurrent, compidcurrent].cs.messages
                                 .Add((DateTime.Now, compid + " : " + logdata));
 
@@ -4560,7 +4561,19 @@ Mission Planner waits for 2 valid heartbeat packets before connecting");
                         // the change of severity and the autopilot version where introduced at the same time, so any version non 0 can be used
                         // copter 3.4+
                         // plane 3.4+
-                        if (MAVlist[sysid, compid].cs.version.Major > 0 || MAVlist[sysid, compid].cs.version.Minor >= 4)
+                        Version version;
+                        if (child)
+                        {
+                            // child components will not have reported an AUTOPILOT_VERSION. Instead, compare to
+                            // version of the parent component
+                            version = MAVlist[sysidcurrent, compidcurrent].cs.version;
+                        }
+                        else
+                        {
+                            version = MAVlist[sysid, compid].cs.version;
+                        }
+
+                        if (version.Major > 0 || version.Minor >= 4)
                         {
                             if (sev <= (byte)MAV_SEVERITY.WARNING)
                             {
@@ -4582,7 +4595,7 @@ Mission Planner waits for 2 valid heartbeat packets before connecting");
                         if (printit)
                         {
                             // high severity msg publish to current selected mav
-                            if (sysid == sysidcurrent && compid != compidcurrent)
+                            if (child)
                                 MAVlist[sysid, compidcurrent].cs.messageHigh = compid + " : " + logdata;
 
                             MAVlist[sysid, compid].cs.messageHigh = logdata;
