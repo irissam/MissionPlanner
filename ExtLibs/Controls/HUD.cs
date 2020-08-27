@@ -2690,12 +2690,14 @@ namespace MissionPlanner.Controls
                 if (message != null && message != "")
                 {
                     Brush brush;
-                    if (messageSeverity <= MAVLink.MAV_SEVERITY.ERROR)
+                    if (messageSeverity <= MAVLink.MAV_SEVERITY.EMERGENCY)
                         brush = Brushes.Red;
-                    else if (messageSeverity <= MAVLink.MAV_SEVERITY.WARNING)
+                    else if (messageSeverity <= MAVLink.MAV_SEVERITY.ALERT)
                         brush = Brushes.Yellow;
-                    else
+                    else if (messageSeverity <= MAVLink.MAV_SEVERITY.WARNING)
                         brush = Brushes.White;
+                    else
+                        brush = Brushes.Green;
 
                     var newfontsize = calcsize(message, font, fontsize + 10, (SolidBrush) brush, Width - 50 - 50);
 
