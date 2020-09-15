@@ -2761,6 +2761,7 @@ namespace MissionPlanner.Controls
                     }
                 }
 
+                // Draw an indicator when aural alerts are disabled.
                 if (Settings.Instance["speechenable"] == bool.FalseString)
                 {
                     int msgX = (int)(this.Width * 0.01);
