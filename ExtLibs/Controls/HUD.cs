@@ -2761,6 +2761,15 @@ namespace MissionPlanner.Controls
                     }
                 }
 
+                if (Settings.Instance["speechenable"] == bool.FalseString)
+                {
+                    int msgX = (int)(this.Width * 0.01);
+                    int msgY = (int)(this.Height * 0.9);
+
+                    drawstring("Aural alerts disabled", font, fontsize, (SolidBrush) Brushes.Red, msgX, msgY);
+                }
+
+
                 if (DesignMode)
                 {
                     return;
